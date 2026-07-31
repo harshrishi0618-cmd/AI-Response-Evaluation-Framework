@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "ai-response-evaluation-framework"
+version = "0.1.0"
+description = "An open-source framework for evaluating AI and LLM responses."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+
+authors = [
+    { name = "Harsh Yadav" }
+]
+
+keywords = [
+    "llm",
+    "evaluation",
+    "ai",
+    "nlp",
+    "python",
+    "framework",
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = []
+
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
