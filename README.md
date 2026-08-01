@@ -117,7 +117,7 @@ engine = EvaluationEngine(
 
 report = engine.evaluate(
     prompt="Explain machine learning.",
-    response="Machine learning is a branch of AI that learns from data."
+    response="Machine learning is a branch of AI that learns from data.",
 )
 
 print(report.overall_score)
