@@ -5,14 +5,9 @@ from ai_response_eval.models.result import EvaluationResult
 
 
 class DummyEvaluator(BaseEvaluator):
-    @property
-    def metric_name(self) -> str:
-        return "Dummy"
+    """Simple evaluator used only for testing."""
 
-    def evaluate(
-        self,
-        request: EvaluationRequest,
-    ) -> EvaluationResult:
+    def evaluate(self, request: EvaluationRequest) -> EvaluationResult:
         return EvaluationResult(
             metric_name="Dummy",
             score=1.0,
@@ -21,16 +16,16 @@ class DummyEvaluator(BaseEvaluator):
         )
 
 
-def test_engine_runs_all_evaluators():
-    engine = EvaluationEngine(evaluators=[DummyEvaluator()])
-
+def test_engine_pipeline():
     request = EvaluationRequest(
-        prompt="Hello",
-        response="Hi",
+        prompt="Explain AI", response="AI is Artificial Intelligence."
     )
+
+    engine = EvaluationEngine(evaluators=[DummyEvaluator()])
 
     report = engine.evaluate(request)
 
-    assert report.total_metrics == 1
     assert report.overall_score == 1.0
     assert report.passed is True
+    assert len(report.results) == 1
+    assert report.results[0].metric_name == "Dummy"

@@ -15,22 +15,24 @@ def test_report_statistics():
 
     report.add_result(
         EvaluationResult(
-            metric="Relevance",
-            score=8,
-            max_score=10,
+            metric_name="Relevance",
+            score=0.8,
+            feedback="Good",
+            passed=True,
         )
     )
 
     report.add_result(
         EvaluationResult(
-            metric="Clarity",
-            score=6,
-            max_score=10,
+            metric_name="Clarity",
+            score=0.6,
+            feedback="Needs work",
+            passed=False,
         )
     )
 
     assert report.total_metrics == 2
     assert report.passed_metrics == 1
     assert report.failed_metrics == 1
-    assert report.overall_score == 70.0
+    assert report.overall_score == 0.7
     assert report.passed is False

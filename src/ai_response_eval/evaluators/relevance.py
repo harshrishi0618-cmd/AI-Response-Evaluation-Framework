@@ -19,6 +19,7 @@ class RelevanceEvaluator(BaseEvaluator):
         self,
         request: EvaluationRequest,
     ) -> EvaluationResult:
+
         prompt_keywords = set(extract_keywords(request.prompt))
         response_keywords = set(extract_keywords(request.response))
 
@@ -26,27 +27,27 @@ class RelevanceEvaluator(BaseEvaluator):
             score = 0.0
         else:
             overlap = prompt_keywords & response_keywords
-            score = (len(overlap) / len(prompt_keywords)) * 10
+            score = len(overlap) / len(prompt_keywords)
 
-        feedback = self.generate_feedback(score)
+        feedback = self._generate_feedback(score)
 
         return EvaluationResult(
-            metric=self.metric_name,
+            metric_name=self.metric_name,
             score=round(score, 2),
-            max_score=10,
-            confidence=1.0,
-            feedback=[feedback],
+            feedback=feedback,
+            passed=score >= 0.70,
         )
 
     @staticmethod
     def _generate_feedback(score: float) -> str:
-        if score >= 9:
+
+        if score >= 0.90:
             return "The response closely matches the prompt."
 
-        if score >= 7:
+        if score >= 0.70:
             return "The response is mostly relevant."
 
-        if score >= 4:
+        if score >= 0.40:
             return "The response is partially relevant."
 
         return "The response is largely unrelated to the prompt."

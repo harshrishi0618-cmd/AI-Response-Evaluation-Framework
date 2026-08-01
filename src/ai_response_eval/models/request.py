@@ -1,13 +1,15 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from typing import Any
 
 
-@dataclass(slots=True)
+@dataclass
 class EvaluationRequest:
     """
-    Input for an evaluation.
+    Represents all information required to evaluate an AI-generated response.
     """
 
     prompt: str
     response: str
     reference: str | None = None
     model_name: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)

@@ -15,8 +15,8 @@ def test_complete_response():
 
     result = evaluator.evaluate(request)
 
-    assert result.metric == "Completeness"
-    assert result.score >= 9
+    assert result.metric_name == "Completeness"
+    assert result.score >= 0.9
     assert result.passed is True
 
 
@@ -30,7 +30,7 @@ def test_short_response():
 
     result = evaluator.evaluate(request)
 
-    assert result.score < 9
+    assert result.score < 0.9
 
 
 def test_unrelated_response():

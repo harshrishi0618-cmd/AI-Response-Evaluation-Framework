@@ -12,8 +12,8 @@ def test_highly_relevant_response():
 
     result = evaluator.evaluate(request)
 
-    assert result.metric == "Relevance"
-    assert result.score >= 6
+    assert result.metric_name == "Relevance"
+    assert result.score >= 0.6
     assert result.passed is True
 
 

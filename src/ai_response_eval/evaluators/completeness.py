@@ -20,43 +20,47 @@ class CompletenessEvaluator(BaseEvaluator):
         self,
         request: EvaluationRequest,
     ) -> EvaluationResult:
-
         prompt_keywords = set(extract_keywords(request.prompt))
         response_keywords = set(extract_keywords(request.response))
 
         if not prompt_keywords:
             score = 0.0
-
         else:
             overlap = len(prompt_keywords & response_keywords)
             coverage = overlap / len(prompt_keywords)
 
-            bonus = 0
+            # Coverage contributes 70% of the final score.
+            keyword_score = coverage * 0.7
 
-            if len(response_keywords) >= len(prompt_keywords) * 2:
-                bonus = 2
+            if coverage == 0:
+                length_score = 0.0
+            else:
+                length_ratio = min(
+                    len(response_keywords) / (len(prompt_keywords) * 2),
+                    1.0,
+                )
+                length_score = length_ratio * 0.3
 
-            score = min((coverage * 8) + bonus, 10)
+            score = keyword_score + length_score
 
         feedback = self._generate_feedback(score)
 
         return EvaluationResult(
-            metric=self.metric_name,
+            metric_name=self.metric_name,
             score=round(score, 2),
-            max_score=10,
-            confidence=1.0,
-            feedback=[feedback],
+            feedback=feedback,
+            passed=score >= 0.70,
         )
 
     @staticmethod
     def _generate_feedback(score: float) -> str:
-        if score >= 9:
+        if score >= 0.90:
             return "The response thoroughly covers the requested topic."
 
-        if score >= 7:
+        if score >= 0.70:
             return "The response covers most of the requested topic."
 
-        if score >= 4:
+        if score >= 0.40:
             return "The response is only partially complete."
 
         return "The response is missing important information."

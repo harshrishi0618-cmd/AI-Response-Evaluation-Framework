@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from ai_response_eval.evaluation.base import BaseEvaluator
 from ai_response_eval.models.report import EvaluationReport
 from ai_response_eval.models.request import EvaluationRequest
@@ -7,22 +5,22 @@ from ai_response_eval.models.request import EvaluationRequest
 
 class EvaluationEngine:
     """
-    Runs all registered evaluators.
+    Coordinates all evaluators and produces a final evaluation report.
     """
 
-    def __init__(self, evaluators: list[BaseEvaluator]) -> None:
+    def __init__(self, evaluators: list[BaseEvaluator]):
+        if not evaluators:
+            raise ValueError("EvaluationEngine requires at least one evaluator.")
+
         self.evaluators = evaluators
 
     def evaluate(
         self,
-        prompt: str,
-        response: str,
+        request: EvaluationRequest,
     ) -> EvaluationReport:
-
-        request = EvaluationRequest(
-            prompt=prompt,
-            response=response,
-        )
+        """
+        Run all evaluators and generate a report.
+        """
 
         report = EvaluationReport()
 
