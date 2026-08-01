@@ -2,3 +2,6 @@ black
 pytest
 ruff
 pre-commit
+
+sentence-transformers
+torch
