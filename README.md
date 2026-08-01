@@ -1,5 +1,9 @@
 # AI Response Evaluation Framework
 
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+
+![License](https://img.shields.io/badge/License-MIT-green)
+
 An open-source Python framework for evaluating Large Language Model (LLM) responses using modular evaluation metrics such as relevance, completeness, clarity, safety, and more.
 
 The project is designed with extensibility in mind, allowing new evaluation metrics to be added with minimal changes to the core framework.
