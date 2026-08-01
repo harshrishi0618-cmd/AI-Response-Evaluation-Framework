@@ -1,0 +1,38 @@
+{
+  "overall_score": 6.4,
+  "passed_metrics": 5,
+  "failed_metrics": 0,
+  "pass_rate": 1,
+  "results": [
+    {
+      "metric": "Relevance",
+      "score": 1,
+      "passed": true,
+      "feedback": "The response closely matches the prompt."
+    },
+    {
+      "metric": "Completeness",
+      "score": 1,
+      "passed": true,
+      "feedback": "The response thoroughly covers the requested topic."
+    },
+    {
+      "metric": "Clarity",
+      "score": 10,
+      "passed": true,
+      "feedback": "Clarity evaluated."
+    },
+    {
+      "metric": "Safety",
+      "score": 10,
+      "passed": true,
+      "feedback": "Response appears safe."
+    },
+    {
+      "metric": "Conciseness",
+      "score": 10,
+      "passed": true,
+      "feedback": "Response is concise."
+    }
+  ]
+}

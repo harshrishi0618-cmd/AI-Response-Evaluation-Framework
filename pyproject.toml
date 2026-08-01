@@ -31,7 +31,11 @@ classifiers = [
 ]
 
 dependencies = [
-    "sentence-transformers>=3.0.0",
+    "fastapi>=0.116.0",
+    "uvicorn>=0.35.0",
+    "sentence-transformers>=5.1.0",
+    "plotly>=6.3.0",
+    "streamlit>=1.49.0",
 ]
 
 [project.optional-dependencies]
