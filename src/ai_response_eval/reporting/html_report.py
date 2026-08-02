@@ -15,6 +15,18 @@ class HTMLReportGenerator:
     def generate(self, report: EvaluationReport) -> str:
         summary = SummaryBuilder.build(report)
 
+        status = report.status
+
+        if status == "PASSED":
+            banner_color = "#22c55e"
+            banner_bg = "#dcfce7"
+        elif status == "REVIEW":
+            banner_color = "#f59e0b"
+            banner_bg = "#fef3c7"
+        else:
+            banner_color = "#ef4444"
+            banner_bg = "#fee2e2"
+
         metric_cards = []
 
         for result in report.results:
@@ -22,13 +34,13 @@ class HTMLReportGenerator:
             percent = score * 10
 
             if score >= 8:
-                status = "PASS"
+                metric_status = "PASS"
                 color = "#22c55e"
             elif score >= 6:
-                status = "WARNING"
+                metric_status = "WARNING"
                 color = "#f59e0b"
             else:
-                status = "FAIL"
+                metric_status = "FAIL"
                 color = "#ef4444"
 
             metric_cards.append(
@@ -43,7 +55,7 @@ class HTMLReportGenerator:
 
 <div class="metric-status"
 style="background:{color};">
-{status}
+{metric_status}
 </div>
 
 </div>
@@ -200,6 +212,15 @@ padding:25px;
 border-radius:12px;
 line-height:1.8;
 font-size:17px;
+}}
+
+.status-banner{{
+padding:28px;
+margin:35px;
+border-radius:18px;
+font-size:20px;
+font-weight:700;
+text-align:center;
 }}
 
 .info-grid{{
@@ -386,11 +407,11 @@ Professional AI Response Quality Assessment Report
 <div class="card">
 
 <div class="card-title">
-Overall Score
+Evaluation Status
 </div>
 
 <div class="big-score">
-{summary.overall_score:.2f}/10
+{status}
 </div>
 
 <div class="grade">
@@ -430,6 +451,18 @@ Evaluation Status
 </div>
 
 </div>
+
+</div>
+
+<div
+class="status-banner"
+style="
+background:{banner_bg};
+color:{banner_color};
+border:3px solid {banner_color};
+">
+
+Evaluation Status: {status}
 
 </div>
 

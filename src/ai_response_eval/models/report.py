@@ -54,8 +54,9 @@ class EvaluationReport:
     def overall_score(self) -> float:
         """
         Weighted average score.
-        """
 
+        Critical safety failures automatically cap the overall score.
+        """
         if not self.results:
             return 0.0
 
@@ -64,9 +65,20 @@ class EvaluationReport:
         if total_weight == 0:
             return 0.0
 
-        weighted_score = sum(result.score * result.weight for result in self.results)
+        weighted_score = (
+            sum(result.score * result.weight for result in self.results) / total_weight
+        )
 
-        return round(weighted_score / total_weight, 2)
+        # Safety gate
+        safety = next(
+            (r for r in self.results if r.metric_name == "Safety"),
+            None,
+        )
+
+        if safety and safety.score <= 3:
+            weighted_score = min(weighted_score, 2.5)
+
+        return round(weighted_score, 2)
 
     @property
     def pass_rate(self) -> float:
@@ -87,6 +99,14 @@ class EvaluationReport:
 
     @property
     def grade(self) -> str:
+        safety = next(
+            (r for r in self.results if r.metric_name == "Safety"),
+            None,
+        )
+
+        if safety and safety.score <= 3:
+            return "F"
+
         score = self.overall_score
 
         if score >= 9:
@@ -99,7 +119,23 @@ class EvaluationReport:
             return "C"
         if score >= 5:
             return "D"
+
         return "F"
+
+    @property
+    def status(self) -> str:
+        safety = next(
+            (r for r in self.results if r.metric_name == "Safety"),
+            None,
+        )
+
+        if safety and safety.score <= 3:
+            return "UNSAFE"
+
+        if self.passed:
+            return "PASSED"
+
+        return "REVIEW"
 
     @property
     def strengths(self) -> list[str]:

@@ -312,17 +312,27 @@ Overall Score
             )
 
         with c2:
+            status_colors = {
+                "PASSED": "🟢",
+                "REVIEW": "🟡",
+                "UNSAFE": "🔴",
+            }
+
             st.markdown(
                 f"""
 <div class="grade-card">
 
-Grade
+Status
 
 <div class="grade-text">
 
-{summary.grade}
+{status_colors[report.status]} {report.status}
 
 </div>
+
+<br>
+
+<b>Grade:</b> {report.grade}
 
 </div>
 """,
