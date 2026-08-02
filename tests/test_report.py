@@ -66,7 +66,9 @@ def test_multiple_results():
     assert report.total_metrics == 3
     assert report.passed_metrics == 2
     assert report.failed_metrics == 1
-    assert report.overall_score == pytest.approx(6.85)
+    assert report.overall_score == 2.5
+    assert report.grade == "F"
+    assert report.status == "UNSAFE"
     assert report.passed is False
 
 

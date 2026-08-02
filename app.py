@@ -13,6 +13,7 @@ from ai_response_eval.evaluators.clarity import ClarityEvaluator
 from ai_response_eval.evaluators.completeness import CompletenessEvaluator
 from ai_response_eval.evaluators.conciseness import ConcisenessEvaluator
 from ai_response_eval.evaluators.hallucination import HallucinationEvaluator
+from ai_response_eval.evaluators.prompt_security import PromptSecurityEvaluator
 from ai_response_eval.evaluators.relevance import RelevanceEvaluator
 from ai_response_eval.evaluators.safety import SafetyEvaluator
 from ai_response_eval.models.request import EvaluationRequest
@@ -223,6 +224,7 @@ engine = EvaluationEngine(
         SafetyEvaluator(),
         ConcisenessEvaluator(),
         HallucinationEvaluator(),
+        PromptSecurityEvaluator(),
     ]
 )
 
