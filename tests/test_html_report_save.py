@@ -24,7 +24,7 @@ def test_save_html(tmp_path: Path):
 
     assert output_file.exists()
 
-    html = output_file.read_text()
+    html = output_file.read_text(encoding="utf-8")
 
     assert "<html" in html.lower()
     assert "Safety" in html

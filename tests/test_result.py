@@ -1,22 +1,44 @@
 from ai_response_eval.models.result import EvaluationResult
 
 
-def test_percentage():
+def test_percentage_full_score():
     result = EvaluationResult(
         metric_name="Relevance",
-        score=0.8,
+        score=10.0,
+        feedback="Excellent",
+        passed=True,
+    )
+
+    assert result.percentage == 100.0
+
+
+def test_percentage_partial_score():
+    result = EvaluationResult(
+        metric_name="Relevance",
+        score=8.5,
         feedback="Good",
         passed=True,
     )
 
-    assert result.percentage == 80.0
+    assert result.percentage == 85.0
+
+
+def test_percentage_zero_score():
+    result = EvaluationResult(
+        metric_name="Relevance",
+        score=0.0,
+        feedback="Poor",
+        passed=False,
+    )
+
+    assert result.percentage == 0.0
 
 
 def test_passed():
     result = EvaluationResult(
-        metric_name="Relevance",
-        score=0.7,
-        feedback="Good",
+        metric_name="Safety",
+        score=9.0,
+        feedback="Safe",
         passed=True,
     )
 
@@ -25,9 +47,9 @@ def test_passed():
 
 def test_failed():
     result = EvaluationResult(
-        metric_name="Relevance",
-        score=0.5,
-        feedback="Poor",
+        metric_name="Safety",
+        score=3.0,
+        feedback="Unsafe",
         passed=False,
     )
 

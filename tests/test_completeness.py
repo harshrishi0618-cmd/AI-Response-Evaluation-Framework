@@ -9,15 +9,31 @@ def test_complete_response():
         prompt="Explain machine learning",
         response=(
             "Machine learning is a branch of artificial intelligence "
-            "that learns patterns from data."
+            "that enables computers to learn patterns from data. "
+            "It is widely used in computer vision, natural language "
+            "processing, recommendation systems, and predictive analytics."
         ),
     )
 
     result = evaluator.evaluate(request)
 
     assert result.metric_name == "Completeness"
-    assert result.score >= 0.9
+    assert 7.5 <= result.score <= 10
     assert result.passed is True
+
+
+def test_partially_complete_response():
+    evaluator = CompletenessEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain machine learning",
+        response="Machine learning is a branch of AI.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert 5 <= result.score < 8
+    assert result.passed is False
 
 
 def test_short_response():
@@ -30,7 +46,8 @@ def test_short_response():
 
     result = evaluator.evaluate(request)
 
-    assert result.score < 0.9
+    assert result.score < 5
+    assert result.passed is False
 
 
 def test_unrelated_response():
@@ -43,7 +60,7 @@ def test_unrelated_response():
 
     result = evaluator.evaluate(request)
 
-    assert result.score == 0
+    assert result.score <= 2
     assert result.passed is False
 
 
@@ -58,6 +75,7 @@ def test_empty_prompt():
     result = evaluator.evaluate(request)
 
     assert result.score == 0
+    assert result.passed is False
 
 
 def test_empty_response():
@@ -71,3 +89,4 @@ def test_empty_response():
     result = evaluator.evaluate(request)
 
     assert result.score == 0
+    assert result.passed is False

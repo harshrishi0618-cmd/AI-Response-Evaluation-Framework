@@ -28,7 +28,7 @@ def test_full_report_pipeline(tmp_path: Path):
 
     assert output_file.exists()
 
-    html = output_file.read_text()
+    html = output_file.read_text(encoding="utf-8")
 
     assert "Relevance" in html
     assert "Overall Score" in html

@@ -11,11 +11,15 @@ class EvaluationResult:
     score: float
     feedback: str
     passed: bool
+
+    # Relative importance of this metric.
+    # Default keeps backward compatibility.
     weight: float = 1.0
 
     @property
     def percentage(self) -> float:
         """
-        Returns the score as a percentage.
+        Converts a 0–10 score into a percentage.
         """
-        return round(self.score * 100, 2)
+        score = max(0.0, min(self.score, 10.0))
+        return round(score * 10.0, 2)

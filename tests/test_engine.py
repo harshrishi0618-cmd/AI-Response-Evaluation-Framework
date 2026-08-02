@@ -15,14 +15,16 @@ class DummyEvaluator(BaseEvaluator):
     ) -> EvaluationResult:
         return EvaluationResult(
             metric_name="Dummy",
-            score=1.0,
+            score=10.0,
             feedback="Everything looks good.",
             passed=True,
         )
 
 
 def test_engine_runs_all_evaluators():
-    engine = EvaluationEngine(evaluators=[DummyEvaluator()])
+    engine = EvaluationEngine(
+        evaluators=[DummyEvaluator()],
+    )
 
     request = EvaluationRequest(
         prompt="Hello",
@@ -32,5 +34,7 @@ def test_engine_runs_all_evaluators():
     report = engine.evaluate(request)
 
     assert report.total_metrics == 1
-    assert report.overall_score == 1.0
+    assert report.passed_metrics == 1
+    assert report.failed_metrics == 0
+    assert report.overall_score == 10.0
     assert report.passed is True

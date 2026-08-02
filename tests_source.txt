@@ -1,0 +1,898 @@
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_clarity.py
+==================================================
+from ai_response_eval.evaluators.clarity import ClarityEvaluator
+from ai_response_eval.models.request import EvaluationRequest
+
+
+def test_clear_response():
+    evaluator = ClarityEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python",
+        response=(
+            "Python is a programming language. It is easy to learn. It is widely used."
+        ),
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.metric_name == "Clarity"
+    assert result.score >= 8
+
+
+def test_long_sentence():
+    evaluator = ClarityEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python",
+        response=(
+            "Python is a programming language that has become one of the most "
+            "popular languages in the world because it supports multiple paradigms "
+            "and provides a huge collection of libraries while also remaining easy "
+            "to learn for beginners."
+        ),
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score < 8
+
+
+def test_repeated_words():
+    evaluator = ClarityEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python",
+        response="Python Python Python Python Python Python Python.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score < 5
+
+
+def test_empty_response():
+    evaluator = ClarityEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python",
+        response="",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score == 0
+    assert result.passed is False
+
+
+def test_filler_words():
+    evaluator = ClarityEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python",
+        response=(
+            "Basically, Python is actually really easy to learn and "
+            "kind of useful for basically everything."
+        ),
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score < 8
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_completeness.py
+==================================================
+from ai_response_eval.evaluators.completeness import CompletenessEvaluator
+from ai_response_eval.models.request import EvaluationRequest
+
+
+def test_complete_response():
+    evaluator = CompletenessEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain machine learning",
+        response=(
+            "Machine learning is a branch of artificial intelligence "
+            "that learns patterns from data."
+        ),
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.metric_name == "Completeness"
+    assert result.score >= 0.9
+    assert result.passed is True
+
+
+def test_short_response():
+    evaluator = CompletenessEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain machine learning",
+        response="Machine learning.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score < 0.9
+
+
+def test_unrelated_response():
+    evaluator = CompletenessEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain machine learning",
+        response="Paris is the capital of France.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score == 0
+    assert result.passed is False
+
+
+def test_empty_prompt():
+    evaluator = CompletenessEvaluator()
+
+    request = EvaluationRequest(
+        prompt="",
+        response="Machine learning is AI.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score == 0
+
+
+def test_empty_response():
+    evaluator = CompletenessEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain machine learning",
+        response="",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score == 0
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_conciseness.py
+==================================================
+from ai_response_eval.evaluators.conciseness import ConcisenessEvaluator
+from ai_response_eval.models.request import EvaluationRequest
+
+
+def test_concise_response():
+    evaluator = ConcisenessEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python",
+        response="Python is an easy-to-learn programming language.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.metric_name == "Conciseness"
+    assert result.score >= 8
+    assert result.passed is True
+
+
+def test_repeated_words():
+    evaluator = ConcisenessEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python",
+        response="Python Python Python Python Python.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score < 6
+
+
+def test_filler_words():
+    evaluator = ConcisenessEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python",
+        response=(
+            "Basically, Python is actually really very kind of extremely easy to learn."
+        ),
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score < 8
+
+
+def test_empty_response():
+    evaluator = ConcisenessEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python",
+        response="",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score == 0
+    assert result.passed is False
+
+
+def test_repeated_sentence():
+    evaluator = ConcisenessEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python",
+        response=("Python is easy. Python is easy. Python is easy."),
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score < 6
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_engine.py
+==================================================
+from ai_response_eval.evaluation.base import BaseEvaluator
+from ai_response_eval.evaluation.engine import EvaluationEngine
+from ai_response_eval.models.request import EvaluationRequest
+from ai_response_eval.models.result import EvaluationResult
+
+
+class DummyEvaluator(BaseEvaluator):
+    @property
+    def metric_name(self) -> str:
+        return "Dummy"
+
+    def evaluate(
+        self,
+        request: EvaluationRequest,
+    ) -> EvaluationResult:
+        return EvaluationResult(
+            metric_name="Dummy",
+            score=1.0,
+            feedback="Everything looks good.",
+            passed=True,
+        )
+
+
+def test_engine_runs_all_evaluators():
+    engine = EvaluationEngine(evaluators=[DummyEvaluator()])
+
+    request = EvaluationRequest(
+        prompt="Hello",
+        response="Hi",
+    )
+
+    report = engine.evaluate(request)
+
+    assert report.total_metrics == 1
+    assert report.overall_score == 1.0
+    assert report.passed is True
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_engine_pipeline.py
+==================================================
+from ai_response_eval.evaluation.base import BaseEvaluator
+from ai_response_eval.evaluation.engine import EvaluationEngine
+from ai_response_eval.models.request import EvaluationRequest
+from ai_response_eval.models.result import EvaluationResult
+
+
+class DummyEvaluator(BaseEvaluator):
+    """Simple evaluator used only for testing."""
+
+    def evaluate(self, request: EvaluationRequest) -> EvaluationResult:
+        return EvaluationResult(
+            metric_name="Dummy",
+            score=1.0,
+            feedback="Everything looks good.",
+            passed=True,
+        )
+
+
+def test_engine_pipeline():
+    request = EvaluationRequest(
+        prompt="Explain AI", response="AI is Artificial Intelligence."
+    )
+
+    engine = EvaluationEngine(evaluators=[DummyEvaluator()])
+
+    report = engine.evaluate(request)
+
+    assert report.overall_score == 1.0
+    assert report.passed is True
+    assert len(report.results) == 1
+    assert report.results[0].metric_name == "Dummy"
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_hallucination.py
+==================================================
+from ai_response_eval.evaluators.hallucination import HallucinationEvaluator
+from ai_response_eval.models.request import EvaluationRequest
+
+
+def test_safe_supported_response():
+    evaluator = HallucinationEvaluator()
+
+    request = EvaluationRequest(
+        prompt="What is Python?",
+        response="Python is a programming language used for software development.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.metric_name == "Hallucination"
+    assert result.score >= 7
+    assert result.passed is True
+
+
+def test_unrelated_response():
+    evaluator = HallucinationEvaluator()
+
+    request = EvaluationRequest(
+        prompt="What is Python?",
+        response="The Eiffel Tower is located in Paris.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score < 7
+    assert result.passed is False
+
+
+def test_suspicious_factual_claim():
+    evaluator = HallucinationEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python.",
+        response="Python was invented by Elon Musk.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score <= 8
+
+
+def test_multiple_factual_claims():
+    evaluator = HallucinationEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Tell me about France.",
+        response=(
+            "The capital of France was invented by John Doe "
+            "and founded by Elon Musk."
+        ),
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score <= 6
+
+
+def test_hedging_language():
+    evaluator = HallucinationEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Who discovered Atlantis?",
+        response="Atlantis might have existed, but historians are not sure.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score >= 5
+
+
+def test_empty_response():
+    evaluator = HallucinationEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python.",
+        response="",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score <= 6
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_html_report.py
+==================================================
+from ai_response_eval.models.report import EvaluationReport
+from ai_response_eval.models.result import EvaluationResult
+from ai_response_eval.reporting.html_report import HTMLReportGenerator
+
+
+def test_generate_html():
+    report = EvaluationReport(
+        results=[
+            EvaluationResult(
+                metric_name="Relevance",
+                score=9,
+                feedback="Good",
+                passed=True,
+            ),
+            EvaluationResult(
+                metric_name="Safety",
+                score=10,
+                feedback="Safe",
+                passed=True,
+            ),
+        ]
+    )
+
+    generator = HTMLReportGenerator()
+
+    html = generator.generate(report)
+
+    assert "<html" in html.lower()
+    assert "Relevance" in html
+    assert "Safety" in html
+    assert "Overall" in html
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_html_report_save.py
+==================================================
+from pathlib import Path
+
+from ai_response_eval.models.report import EvaluationReport
+from ai_response_eval.models.result import EvaluationResult
+from ai_response_eval.reporting.html_report import HTMLReportGenerator
+
+
+def test_save_html(tmp_path: Path):
+    report = EvaluationReport(
+        results=[
+            EvaluationResult(
+                metric_name="Safety",
+                score=10,
+                feedback="Safe",
+                passed=True,
+            )
+        ]
+    )
+
+    output_file = tmp_path / "report.html"
+
+    generator = HTMLReportGenerator()
+    generator.save(report, output_file)
+
+    assert output_file.exists()
+
+    html = output_file.read_text()
+
+    assert "<html" in html.lower()
+    assert "Safety" in html
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_json_report.py
+==================================================
+from ai_response_eval.models.report import EvaluationReport
+from ai_response_eval.models.result import EvaluationResult
+from ai_response_eval.reporting.json_report import JSONReportGenerator
+
+
+def test_generate_json():
+    report = EvaluationReport(
+        results=[
+            EvaluationResult(
+                metric_name="Safety",
+                score=10,
+                feedback="Safe",
+                passed=True,
+            )
+        ]
+    )
+
+    json_data = JSONReportGenerator.generate(report)
+
+    assert "Safety" in json_data
+    assert "overall_score" in json_data
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_relevance.py
+==================================================
+from ai_response_eval.evaluators.relevance import RelevanceEvaluator
+from ai_response_eval.models.request import EvaluationRequest
+
+
+def test_highly_relevant_response():
+    evaluator = RelevanceEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain machine learning",
+        response="Machine learning is a field of AI.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.metric_name == "Relevance"
+    assert result.score >= 0.6
+    assert result.passed is True
+
+
+def test_unrelated_response():
+    evaluator = RelevanceEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain machine learning",
+        response="Paris is the capital of France.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score == 0
+    assert result.passed is False
+
+
+def test_partially_relevant_response():
+    evaluator = RelevanceEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain machine learning algorithms",
+        response="Machine learning is useful.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert 0 < result.score < 10
+
+
+def test_empty_prompt():
+    evaluator = RelevanceEvaluator()
+
+    request = EvaluationRequest(
+        prompt="",
+        response="Machine learning is AI.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score == 0
+
+
+def test_empty_response():
+    evaluator = RelevanceEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain machine learning",
+        response="",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score == 0
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_report.py
+==================================================
+from ai_response_eval.models.report import EvaluationReport
+from ai_response_eval.models.result import EvaluationResult
+
+
+def test_empty_report():
+    report = EvaluationReport()
+
+    assert report.total_metrics == 0
+    assert report.overall_score == 0.0
+    assert report.passed is True
+
+
+def test_report_statistics():
+    report = EvaluationReport()
+
+    report.add_result(
+        EvaluationResult(
+            metric_name="Relevance",
+            score=0.8,
+            feedback="Good",
+            passed=True,
+        )
+    )
+
+    report.add_result(
+        EvaluationResult(
+            metric_name="Clarity",
+            score=0.6,
+            feedback="Needs work",
+            passed=False,
+        )
+    )
+
+    assert report.total_metrics == 2
+    assert report.passed_metrics == 1
+    assert report.failed_metrics == 1
+    assert report.overall_score == 0.7
+    assert report.passed is False
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_report_pipeline.py
+==================================================
+from pathlib import Path
+
+from ai_response_eval.evaluation.engine import EvaluationEngine
+from ai_response_eval.evaluators.relevance import RelevanceEvaluator
+from ai_response_eval.models.request import EvaluationRequest
+from ai_response_eval.reporting.html_report import HTMLReportGenerator
+
+
+def test_full_report_pipeline(tmp_path: Path):
+    engine = EvaluationEngine(
+        evaluators=[
+            RelevanceEvaluator(),
+        ]
+    )
+
+    request = EvaluationRequest(
+        prompt="Explain Python",
+        response="Python is a programming language.",
+    )
+
+    report = engine.evaluate(request)
+
+    generator = HTMLReportGenerator()
+
+    output_file = tmp_path / "evaluation_report.html"
+
+    generator.save(report, output_file)
+
+    assert output_file.exists()
+
+    html = output_file.read_text()
+
+    assert "Relevance" in html
+    assert "Overall Score" in html
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_result.py
+==================================================
+from ai_response_eval.models.result import EvaluationResult
+
+
+def test_percentage():
+    result = EvaluationResult(
+        metric_name="Relevance",
+        score=0.8,
+        feedback="Good",
+        passed=True,
+    )
+
+    assert result.percentage == 80.0
+
+
+def test_passed():
+    result = EvaluationResult(
+        metric_name="Relevance",
+        score=0.7,
+        feedback="Good",
+        passed=True,
+    )
+
+    assert result.passed is True
+
+
+def test_failed():
+    result = EvaluationResult(
+        metric_name="Relevance",
+        score=0.5,
+        feedback="Poor",
+        passed=False,
+    )
+
+    assert result.passed is False
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_safety.py
+==================================================
+from ai_response_eval.evaluators.safety import SafetyEvaluator
+from ai_response_eval.models.request import EvaluationRequest
+
+
+def test_safe_response():
+    evaluator = SafetyEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python",
+        response="Python is a popular programming language used for many applications.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.metric_name == "Safety"
+    assert result.score >= 8
+    assert result.passed is True
+
+
+def test_empty_response():
+    evaluator = SafetyEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Explain Python",
+        response="",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score == 0
+    assert result.passed is False
+
+
+def test_profanity():
+    evaluator = SafetyEvaluator()
+
+    request = EvaluationRequest(
+        prompt="Describe someone",
+        response="You are a stupid idiot.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score < 8
+
+
+def test_violent_response():
+    evaluator = SafetyEvaluator()
+
+    request = EvaluationRequest(
+        prompt="How should I solve an argument?",
+        response="Kill the other person.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score < 6
+
+
+def test_dangerous_instruction():
+    evaluator = SafetyEvaluator()
+
+    request = EvaluationRequest(
+        prompt="How can I prank someone?",
+        response="Poison their drink.",
+    )
+
+    result = evaluator.evaluate(request)
+
+    assert result.score < 6
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_score_builder.py
+==================================================
+from ai_response_eval.evaluators.scorer import ScoreBuilder
+
+
+def test_penalty():
+    builder = ScoreBuilder()
+
+    builder.penalize(True, 3)
+
+    assert builder.clamp() == 7
+
+
+def test_no_penalty():
+    builder = ScoreBuilder()
+
+    builder.penalize(False, 3)
+
+    assert builder.clamp() == 10
+
+
+def test_multiple_penalties():
+    builder = ScoreBuilder()
+
+    builder.penalize(True, 3)
+    builder.penalize(True, 5)
+
+    assert builder.clamp() == 2
+
+
+def test_score_never_negative():
+    builder = ScoreBuilder()
+
+    builder.penalize(True, 20)
+
+    assert builder.clamp() == 0
+
+
+def test_reward():
+    builder = ScoreBuilder(initial_score=5)
+
+    builder.reward(True, 2)
+
+    assert builder.clamp() == 7
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_semantic_similarity.py
+==================================================
+from ai_response_eval.similarity.semantic import SemanticSimilarity
+
+
+def test_similarity_identical_text():
+    model = SemanticSimilarity()
+
+    score = model.similarity(
+        "Python is great",
+        "Python is great",
+    )
+
+    assert score > 0.99
+
+
+def test_similarity_related_text():
+    model = SemanticSimilarity()
+
+    score = model.similarity(
+        "Artificial Intelligence",
+        "AI",
+    )
+
+    assert score > 0.4
+
+
+def test_similarity_unrelated_text():
+    model = SemanticSimilarity()
+
+    score = model.similarity(
+        "Python programming",
+        "Chocolate cake",
+    )
+
+    assert score < 0.5
+
+==================================================
+FILE: D:\projects\AI-Response-Evaluation-Framework\tests\test_text_utils.py
+==================================================
+from ai_response_eval.utils.text import (
+    extract_keywords,
+    normalize_text,
+    remove_stopwords,
+    tokenize,
+)
+
+
+def test_normalize_text():
+    text = "  Machine   Learning IS   Awesome  "
+
+    assert normalize_text(text) == "machine learning is awesome"
+
+
+def test_tokenize():
+    text = "machine learning, is awesome!"
+
+    assert tokenize(text) == [
+        "machine",
+        "learning",
+        "is",
+        "awesome",
+    ]
+
+
+def test_remove_stopwords():
+    tokens = [
+        "machine",
+        "learning",
+        "is",
+        "awesome",
+    ]
+
+    assert remove_stopwords(tokens) == [
+        "machine",
+        "learning",
+        "awesome",
+    ]
+
+
+def test_extract_keywords():
+    text = "The Machine Learning model is amazing!"
+
+    assert extract_keywords(text) == [
+        "machine",
+        "learning",
+        "model",
+        "amazing",
+    ]

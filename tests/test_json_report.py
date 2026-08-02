@@ -17,5 +17,18 @@ def test_generate_json():
 
     json_data = JSONReportGenerator.generate(report)
 
-    assert "Safety" in json_data
-    assert "overall_score" in json_data
+    assert isinstance(json_data, dict)
+
+    assert json_data["overall_score"] == 10.0
+    assert json_data["grade"] == "A+"
+    assert json_data["passed_metrics"] == 1
+    assert json_data["failed_metrics"] == 0
+
+    assert len(json_data["metrics"]) == 1
+
+    metric = json_data["metrics"][0]
+
+    assert metric["metric"] == "Safety"
+    assert metric["score"] == 10
+    assert metric["passed"] is True
+    assert metric["feedback"] == "Safe"
