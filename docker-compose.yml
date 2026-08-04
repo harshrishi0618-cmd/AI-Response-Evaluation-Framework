@@ -1,0 +1,9 @@
+services:
+  ai-response-evaluation-framework:
+    build: .
+    container_name: ai-response-evaluation-framework
+
+    ports:
+      - "8501:8501"
+
+    restart: unless-stopped
