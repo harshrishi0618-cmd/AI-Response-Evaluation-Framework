@@ -397,7 +397,7 @@ AI Response Evaluation Framework
 </h1>
 
 <p>
-Professional AI Response Quality Assessment Report
+Comprehensive evaluation of AI-generated responses across multiple quality metrics.
 </p>
 
 </div>
@@ -544,38 +544,13 @@ Metric Evaluation
 <div class="section">
 
 <h2>
-Performance Charts
+Performance Overview
 </h2>
 
-<div class="charts">
+<div class="executive">
 
-<div class="chart-card">
-
-<h3>
-Radar Chart
-</h3>
-
-<div class="chart-placeholder">
-
-Radar Chart Placeholder
-
-</div>
-
-</div>
-
-<div class="chart-card">
-
-<h3>
-Bar Chart
-</h3>
-
-<div class="chart-placeholder">
-
-Bar Chart Placeholder
-
-</div>
-
-</div>
+Interactive charts are available in the Streamlit dashboard.
+This exported HTML report focuses on a clean, portable summary of the evaluation.
 
 </div>
 
@@ -584,11 +559,11 @@ Bar Chart Placeholder
 <div class="footer">
 
 <h3>
-AI Response Evaluation Framework
+AI Response Evaluation Framework v1.0.0
 </h3>
 
 <p>
-Generated automatically by the AI Response Evaluation Framework.
+Professional AI Response Quality Assessment Toolkit
 </p>
 
 <p>
@@ -600,6 +575,10 @@ Grade:
 &nbsp;&nbsp;|&nbsp;&nbsp;
 Metrics Passed:
 <strong>{report.passed_metrics}/{report.total_metrics}</strong>
+</p>
+
+<p style="margin-top:15px;font-size:14px;opacity:0.7;">
+Generated automatically by AI Response Evaluation Framework
 </p>
 
 </div>

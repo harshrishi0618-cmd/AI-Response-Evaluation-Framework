@@ -1,11 +1,13 @@
 # AI Response Evaluation Framework
+A production-ready framework for evaluating Large Language Model (LLM) responses across **7 quality metrics**, featuring an interactive Streamlit dashboard, FastAPI REST API, batch CSV evaluation, HTML/JSON reporting, GitHub Actions CI, and Docker support.
 
 <p align="center">
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?style=for-the-badge&logo=python)
-![Tests](https://img.shields.io/badge/Tests-82%20Passed-success?style=for-the-badge)
-![FastAPI](https://img.shields.io/badge/FastAPI-Enabled-009688?style=for-the-badge&logo=fastapi)
+![CI](https://github.com/harshrishi0618-cmd/AI-Response-Evaluation-Framework/actions/workflows/ci.yml/badge.svg)
+![Docker](https://img.shields.io/badge/Docker-Supported-2496ED?style=for-the-badge&logo=docker)
 ![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B?style=for-the-badge&logo=streamlit)
+![FastAPI](https://img.shields.io/badge/FastAPI-REST_API-009688?style=for-the-badge&logo=fastapi)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
 </p>
@@ -29,6 +31,18 @@ The project demonstrates software engineering practices including modular archit
 
 ---
 
+## Highlights
+
+- 🔍 Evaluate AI responses across **7 quality metrics**
+- 🛡️ Detect prompt injection and jailbreak attempts
+- 📊 Interactive Streamlit dashboard
+- 📦 Batch CSV evaluation
+- 🌐 FastAPI REST API
+- 📄 HTML & JSON report generation
+- 🐳 Docker support
+- ✅ GitHub Actions CI
+- 🧪 Comprehensive automated tests
+   
 # Features
 
 ## Response Evaluation
@@ -81,33 +95,31 @@ The project demonstrates software engineering practices including modular archit
 
 > **Dashboard**
 
-```
-[ Dashboard Screenshot ]
-```
+
+![Dashboard](docs/images/dashboard.png)
+
+
 
 ---
 
 > **Batch Evaluation**
 
-```
-[ Batch Evaluation Screenshot ]
-```
+
+![Batch Evaluation](docs/images/batch.png)
+
 
 ---
 
 > **FastAPI Documentation**
 
-```
-[ Swagger UI Screenshot ]
-```
+![FastAPI Documentation](docs/images/api.png)
 
 ---
 
 > **HTML Report**
 
-```
-[ HTML Report Screenshot ]
-```
+![HTML Report](docs/images/html_report.png)
+
 
 ---
 
@@ -212,6 +224,24 @@ pip install -r requirements.txt
 ```
 
 ---
+
+
+# Docker
+
+Build and run the application using Docker:
+
+```bash
+docker compose up --build
+```
+
+Open the dashboard:
+
+```
+http://localhost:8501
+```
+
+Docker support provides a reproducible environment without requiring a local Python setup.
+
 
 # Running the Streamlit Dashboard
 
@@ -735,13 +765,13 @@ The framework is actively being improved with new features focused on AI evaluat
 - [x] FastAPI REST API
 - [x] GitHub Actions CI/CD
 - [x] Comprehensive Unit Testing (82 Tests)
-
+- [x] Docker Support
+- [x] Docker Compose
 ---
 
 ## In Progress
 
-- [ ] Docker Support
-- [ ] Docker Compose
+
 - [ ] Configuration File Support
 - [ ] Command Line Interface (CLI)
 
